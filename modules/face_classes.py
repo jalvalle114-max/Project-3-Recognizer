@@ -1,5 +1,6 @@
 import face_recognition
 import numpy as np
+from modules.storage import save_database, load_database
 
 
 class Person:
@@ -15,10 +16,11 @@ class Person:
 class FaceDatabase:
 
     def __init__(self):
-        self.people = []
+        self.people = load_database()
 
     def add_person(self, person: Person):
         self.people.append(person)
+        save_database(self.people)
 
     def __len__(self):
         return len(self.people)
@@ -27,17 +29,14 @@ class FaceDatabase:
 class FaceRecognizer(FaceDatabase):
 
     def recognize(self, unknown_encoding: np.ndarray, tolerance=0.45):
-        
-        known_encodings = [p.encoding for p in self.people]
-        known_names = [p.name for p in self.people]
+        if not self.people:
+            return "Database empty"
 
-        if not known_encodings:
-            return "No registered faces"
+        encodings = [p.encoding for p in self.people]
+        names = [p.name for p in self.people]
 
-        matches = face_recognition.compare_faces(known_encodings, unknown_encoding, tolerance)
+        matches = face_recognition.compare_faces(encodings, unknown_encoding, tolerance)
 
         if True in matches:
-            matched_index = matches.index(True)
-            return known_names[matched_index]
-
+            return names[matches.index(True)]
         return "Unknown"

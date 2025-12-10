@@ -23,7 +23,6 @@ def menu(webcam_enabled: bool):
 
 
 def prompt_image_path(prompt_text="Enter path to image: "):
-    """Ask user for an image path until a valid one is entered."""
     while True:
         path = input(prompt_text).strip()
         if os.path.isfile(path):
