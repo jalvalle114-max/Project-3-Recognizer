@@ -14,7 +14,6 @@ class Person:
 
 
 class FaceDatabase:
-
     def __init__(self):
         self.people = load_database()
 
@@ -40,3 +39,4 @@ class FaceRecognizer(FaceDatabase):
         if True in matches:
             return names[matches.index(True)]
         return "Unknown"
+
